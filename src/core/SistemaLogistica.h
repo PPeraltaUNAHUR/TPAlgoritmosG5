@@ -15,13 +15,13 @@ class SistemaLogistica {
 private:
 
     //Estructuras principales
-    TablaHash<string, Centro*> centros;
+    TablaHash centros;
     Grafo red;
     
     //Índices para búsquedas y análisis
-    TablaHash<string, ABB<Fecha, vector<Envio>>> enviosPorCentro;
-    TablaHash<string, vector<Envio>> indicePaquetes;
-    TablaHash<string, vector<Envio>> indiceClientes;
+    TablaHash enviosPorCentro;
+    TablaHash indicePaquetes;
+    TablaHash indiceClientes;
 
 public:
     //Constructor.
