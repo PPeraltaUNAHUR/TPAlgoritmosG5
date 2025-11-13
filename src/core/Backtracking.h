@@ -34,5 +34,5 @@ private:
 
     double mejorValor{0.0};
 
-    std::vector<int> arbolCombinatorio;
+    std::vector<int> mejorCombinacion;
 };

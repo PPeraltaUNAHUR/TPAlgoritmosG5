@@ -7,7 +7,7 @@
 std::pair<double, std::vector<int>> Backtracking::optimizar(const std::vector<Paquete> &paquetes, double capacidadMaxima)
 {
     mejorValor = 0.0;
-    arbolCombinatorio.clear();
+    mejorCombinacion.clear();
 
     Backtracking::Nodo *arbol = new Backtracking::Nodo(-1, 0.0, 0.0, nullptr);
     std::vector<Paquete> ordenados = paquetes;
@@ -26,7 +26,7 @@ std::pair<double, std::vector<int>> Backtracking::optimizar(const std::vector<Pa
 
     liberarNodo(arbol);
 
-    return {mejorValor, arbolCombinatorio};
+    return {mejorValor, mejorCombinacion};
 }
 
 void Backtracking::backtrack(const std::vector<Paquete> &paquetes,
@@ -54,7 +54,7 @@ void Backtracking::backtrack(const std::vector<Paquete> &paquetes,
             arbActual = arbActual->padre;
         }
         std::reverse(solucion.begin(), solucion.end());
-        arbolCombinatorio = std::move(solucion);
+        mejorCombinacion = std::move(solucion);
     }
 
     if (start >= static_cast<int>(paquetes.size()))
