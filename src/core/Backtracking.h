@@ -12,9 +12,9 @@ public:
 private:
     struct Nodo
     {
-        int id;            // id del paquete
-        double peso;      // peso del paquete
-        double valor;     // valor del paquete
+        int id;
+        double peso;
+        double valor;
         Nodo *padre{nullptr};
         std::vector<Nodo *> hijos;
 
