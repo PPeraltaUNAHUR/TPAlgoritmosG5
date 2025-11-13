@@ -52,7 +52,7 @@ int main()
         }
     }
 
-for (const auto &pr : tmp)
+    for (const auto &pr : tmp)
     {
         int id = pr.first;
         double peso = pr.second;
@@ -95,7 +95,7 @@ for (const auto &pr : tmp)
 
         std::istringstream iss(lineaEntrada);
         double valor;
-        if ( (iss >> valor) )
+        if ((iss >> valor))
         {
             iss >> std::ws;
             if (iss.eof() && valor > 0.0)
