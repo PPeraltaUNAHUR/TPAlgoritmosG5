@@ -15,13 +15,18 @@ class SistemaLogistica {
 private:
 
     //Estructuras principales
-    TablaHash centros;
+    TablaHash<string, Centro> centros;
     Grafo red;
     
     //Índices para búsquedas y análisis
-    TablaHash enviosPorCentro;
-    TablaHash indicePaquetes;
-    TablaHash indiceClientes;
+    TablaHash<string, ABB<Fecha, vector<Envio>>> enviosPorCentro;
+    TablaHash<int, vector<Envio>> indicePaquetes;
+    TablaHash<int, vector<Envio>> indiceClientes;
+    vector<Envio> enviosRegistrados;
+
+    void registrarEnvio(const Envio& envio);
+    static int fechaADias(const Fecha& fecha);
+    static string normalizarCriterio(const string& criterio);
 
 public:
     //Constructor.
@@ -48,5 +53,6 @@ public:
     vector<Envio> enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta);
     vector<Centro*> detectarSobrecarga(int maximo);
     vector<Envio> buscarPorPaquete(int idPaquete);
+    const vector<Envio>& obtenerEnvios() const { return enviosRegistrados; }
 
 };
