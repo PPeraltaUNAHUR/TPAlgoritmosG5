@@ -16,5 +16,5 @@ public:
     ~Grafo();
     void agregarConexion(const string& origen, const string& destino, int peso);
     vector<Arista> obtenerConexiones(const string& codigo);
-    Camino dijkstra(const string& origen, const string& destino);
+    Camino calcularCaminoMinimo(const string& origen, const string& destino);
 };

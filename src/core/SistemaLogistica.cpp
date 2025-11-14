@@ -100,12 +100,12 @@ void SistemaLogistica::cargarEnvios(const string& ruta) {
 }
 
 bool SistemaLogistica::agregarCentro(const Centro& centro) {
-    if (centros.contiene(centro.getCodigo())) {
+    if (centros.contiene(centro.obtenerCodigo())) {
         return false;
     }
 
-    centros.insertar(centro.getCodigo(), centro);
-    enviosPorCentro.insertar(centro.getCodigo(), ABB<Fecha, vector<const Envio*>>{});
+    centros.insertar(centro.obtenerCodigo(), centro);
+    enviosPorCentro.insertar(centro.obtenerCodigo(), ABB<Fecha, vector<const Envio*>>{});
     return true;
 }
 
@@ -136,13 +136,13 @@ vector<Centro*> SistemaLogistica::listarCentros(const string& criterio) {
 
     auto comparador = [&](Centro* a, Centro* b) {
         if (criterioNormalizado == "capacidad") {
-            return a->getCapacidad() > b->getCapacidad();
+            return a->obtenerCapacidad() > b->obtenerCapacidad();
         }
         if (criterioNormalizado == "empleados") {
-            return a->getEmpleados() > b->getEmpleados();
+            return a->obtenerEmpleados() > b->obtenerEmpleados();
         }
         // por defecto ordenar por envíos diarios
-        return a->getEnviosDiarios() > b->getEnviosDiarios();
+        return a->obtenerEnviosDiarios() > b->obtenerEnviosDiarios();
     };
 
     std::sort(resultado.begin(), resultado.end(), comparador);
@@ -150,7 +150,7 @@ vector<Centro*> SistemaLogistica::listarCentros(const string& criterio) {
 }
 
 Camino SistemaLogistica::caminoMinimo(const string& origen, const string& destino) {
-    return red.dijkstra(origen, destino);
+    return red.calcularCaminoMinimo(origen, destino);
 }
 
 vector<const Envio*> SistemaLogistica::enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta) {

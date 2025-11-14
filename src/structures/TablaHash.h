@@ -95,11 +95,11 @@ public:
         }
     }
 
-    std::size_t tam() const {
+    std::size_t tamanio() const {
         return cantidadElementos;
     }
 
-    double factor_carga() const {
+    double factorCarga() const {
         return static_cast<double>(cantidadElementos) / static_cast<double>(capacidad);
     }
 

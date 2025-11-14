@@ -47,12 +47,12 @@ public:
     ColaPrioridad() = default;
     explicit ColaPrioridad(Compare comp) : elementos(), comparar(comp) {}
 
-    bool vacia() const {
+    bool estaVacia() const {
         return elementos.empty();
     }
 
     const T& primero() const {
-        if (vacia()) {
+        if (estaVacia()) {
             throw std::out_of_range("ColaPrioridad::primero - vacia");
         }
         return elementos.front();
@@ -64,7 +64,7 @@ public:
     }
 
     T extraer() {
-        if (vacia()) {
+        if (estaVacia()) {
             throw std::out_of_range("ColaPrioridad::extraer - vacia");
         }
         T resultado = elementos.front();
@@ -76,7 +76,7 @@ public:
         return resultado;
     }
 
-    std::size_t tam() const {
+    std::size_t tamanio() const {
         return elementos.size();
     }
 };

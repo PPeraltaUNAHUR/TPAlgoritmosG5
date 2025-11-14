@@ -19,25 +19,25 @@ public:
     ~Centro();                               // Destructor // Liberar recursos si es necesario //No hace nada en este caso ya que no hay memoria dinámica dentro del Centro
 
     // Getters
-    string getCodigo() const;                       // El compilador te puede dar error, porque una función marcada como const no puede alterar el estado del objeto, esto solo es aclaración de como funciona el const.
-    string getNombre() const;
-    string getCiudad() const;
-    int getCapacidad() const;
-    int getEnviosDiarios() const;
-    int getEmpleados() const;
+    string obtenerCodigo() const;
+    string obtenerNombre() const;
+    string obtenerCiudad() const;
+    int obtenerCapacidad() const;
+    int obtenerEnviosDiarios() const;
+    int obtenerEmpleados() const;
 
     // Setters
-    void setCodigo(string cod);
-    void setNombre(string nom);
-    void setCiudad(string ciudad);
-    void setCapacidad(int cap);
+    void establecerCodigo(string cod);
+    void establecerNombre(string nom);
+    void establecerCiudad(string ciudad);
+    void establecerCapacidad(int cap);
 
     //Verificar si son necesarios los siguientes setters
-    void setEnviosDiarios(int env);
-    void setEmpleados(int emp);
+    void establecerEnviosDiarios(int env);
+    void establecerEmpleados(int emp);
 
     // Otros métodos
-    void mostrarInfo() const;                    // Muestra la información del centro por consola
+    void mostrarInformacion() const;
 
 };
 

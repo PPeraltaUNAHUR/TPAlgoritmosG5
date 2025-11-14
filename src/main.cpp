@@ -91,12 +91,12 @@ void listarSegunCriterio(SistemaLogistica& sistema, const string& criterio) {
     cout << left << setw(10) << "Codigo" << setw(20) << "Nombre" << setw(15) << "Ciudad"
          << setw(12) << "Capacidad" << setw(12) << "Envios" << setw(12) << "Empleados" << "\n";
     for (const auto* centro : centros) {
-        cout << left << setw(10) << centro->getCodigo()
-             << setw(20) << centro->getNombre()
-             << setw(15) << centro->getCiudad()
-             << setw(12) << centro->getCapacidad()
-             << setw(12) << centro->getEnviosDiarios()
-             << setw(12) << centro->getEmpleados() << "\n";
+        cout << left << setw(10) << centro->obtenerCodigo()
+             << setw(20) << centro->obtenerNombre()
+             << setw(15) << centro->obtenerCiudad()
+             << setw(12) << centro->obtenerCapacidad()
+             << setw(12) << centro->obtenerEnviosDiarios()
+             << setw(12) << centro->obtenerEmpleados() << "\n";
     }
 }
 
@@ -141,7 +141,7 @@ void detectarSobrecarga(SistemaLogistica& sistema) {
     }
     cout << "Centros con sobrecarga:\n";
     for (const auto* centro : centros) {
-        cout << " - " << centro->getCodigo() << " (" << centro->getNombre() << ")\n";
+        cout << " - " << centro->obtenerCodigo() << " (" << centro->obtenerNombre() << ")\n";
     }
 }
 

@@ -104,7 +104,7 @@ public:
         return resultado;
     }
 
-    bool vacio() const {
+    bool estaVacio() const {
         return raiz == nullptr;
     }
 

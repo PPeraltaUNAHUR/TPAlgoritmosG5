@@ -14,35 +14,31 @@ Centro::~Centro() {}
 
 // Getters
 
-string Centro::getCodigo() const { return codigo; }
-string Centro::getNombre() const { return nombre; }
-string Centro::getCiudad() const { return ciudad; }
-int Centro::getCapacidad() const { return capacidad; }
-int Centro::getEnviosDiarios() const { return enviosDiarios; }
-int Centro::getEmpleados() const { return empleados; }
+string Centro::obtenerCodigo() const { return codigo; }
+string Centro::obtenerNombre() const { return nombre; }
+string Centro::obtenerCiudad() const { return ciudad; }
+int Centro::obtenerCapacidad() const { return capacidad; }
+int Centro::obtenerEnviosDiarios() const { return enviosDiarios; }
+int Centro::obtenerEmpleados() const { return empleados; }
 
 // Setters 
-void Centro::setCodigo(string cod) { codigo = cod; }
-void Centro::setNombre(string nom) { nombre = nom; }
-void Centro::setCiudad(string ciu) { ciudad = ciu; }
-//void Centro::setCapacidad(int cap) { capacidad = cap; }
-void Centro::setCapacidad(int cap) { 
+void Centro::establecerCodigo(string cod) { codigo = cod; }
+void Centro::establecerNombre(string nom) { nombre = nom; }
+void Centro::establecerCiudad(string ciu) { ciudad = ciu; }
+void Centro::establecerCapacidad(int cap) { 
     if (cap >= 0) capacidad = cap; 
 }
 
-// Verificar si son necesarios los siguientes setters
-//void Centro::setEnviosDiarios(int env) { enviosDiarios = env; }
-//void Centro::setEmpleados(int emp) { empleados = emp; }
-void Centro::setEnviosDiarios(int env) { 
+void Centro::establecerEnviosDiarios(int env) { 
     if (env >= 0) enviosDiarios = env; 
 }
-void Centro::setEmpleados(int emp) { 
+void Centro::establecerEmpleados(int emp) { 
     if (emp >= 0) empleados = emp; 
 }
 
 
 // Otros métodos
-void Centro::mostrarInfo() const {
+void Centro::mostrarInformacion() const {
     cout << "Centro de Distribucion" << endl;       //endl agrega un salto de línea después de imprimir
     cout << "Codigo: " << codigo << endl;
     cout << "Nombre: " << nombre << endl;

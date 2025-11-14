@@ -24,7 +24,7 @@ TEST_CASE("Inserción y obtención (string -> int)") {
     // Then: la tabla contiene las claves y los valores son correctos
     CHECK(tabla.contiene(clave1));
     CHECK(tabla.contiene(clave2));
-    CHECK(tabla.tam() == 2);
+    CHECK(tabla.tamanio() == 2);
     int* pValor = tabla.obtener(clave1);
     REQUIRE(pValor != nullptr);
     CHECK(*pValor == 1);
@@ -42,7 +42,7 @@ TEST_CASE("Eliminación") {
     // Then: la clave ya no está presente
     CHECK(!tabla.contiene(clave));
     CHECK(tabla.obtener(clave) == nullptr);
-    CHECK(tabla.tam() == 0);
+    CHECK(tabla.tamanio() == 0);
 }
 
 TEST_CASE("Actualización (upsert)") {
@@ -56,7 +56,7 @@ TEST_CASE("Actualización (upsert)") {
 
     // Then: el valor se actualiza, no se duplica la entrada
     CHECK(tabla.contiene(clave));
-    CHECK(tabla.tam() == 1);
+    CHECK(tabla.tamanio() == 1);
     int* pValor = tabla.obtener(clave);
     REQUIRE(pValor != nullptr);
     CHECK(*pValor == 99);
@@ -74,7 +74,7 @@ TEST_CASE("Inserción y consulta (string -> Centro)") {
     // Then: la clave existe, se puede obtener y el tamaño coincide
     CHECK(tabla.contiene(clave));
     CHECK(tabla.obtener(clave) != nullptr);
-    CHECK(tabla.tam() == 1);
+    CHECK(tabla.tamanio() == 1);
 }
 
 TEST_CASE("Grafo calcula camino minimo") {
@@ -84,7 +84,7 @@ TEST_CASE("Grafo calcula camino minimo") {
     grafo.agregarConexion("A", "C", 20);
     grafo.agregarConexion("C", "D", 2);
 
-    Camino camino = grafo.dijkstra("A", "D");
+    Camino camino = grafo.calcularCaminoMinimo("A", "D");
     CHECK(camino.getDistanciaTotal() == 10);
     REQUIRE(camino.getNodos().size() == 4);
     CHECK(camino.getNodos().front() == "A");
@@ -125,7 +125,7 @@ TEST_CASE("SistemaLogistica carga datos y consulta indices") {
 
     auto centrosOrdenados = sistema.listarCentros("capacidad");
     REQUIRE(centrosOrdenados.size() == 2);
-    CHECK(centrosOrdenados.front()->getCodigo() == "BUE");
+    CHECK(centrosOrdenados.front()->obtenerCodigo() == "BUE");
 
     Fecha desde("20250101");
     Fecha hasta("20250105");

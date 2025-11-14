@@ -32,7 +32,7 @@ vector<Arista> Grafo::obtenerConexiones(const string& codigo) {
     return *lista;
 }
 
-Camino Grafo::dijkstra(const string& origen, const string& destino) {
+Camino Grafo::calcularCaminoMinimo(const string& origen, const string& destino) {
     Camino resultado;
 
     if (!adyacencias.obtener(origen) || !adyacencias.obtener(destino)) {
@@ -56,7 +56,7 @@ Camino Grafo::dijkstra(const string& origen, const string& destino) {
     distancias.insertar(origen, 0);
     cola.insertar({origen, 0});
 
-    while (!cola.vacia()) {
+    while (!cola.estaVacia()) {
         NodoDist actual = cola.extraer();
 
         bool* yaVisitado = visitados.obtener(actual.codigo);
