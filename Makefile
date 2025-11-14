@@ -19,10 +19,12 @@ LIB_SRCS := $(SRC_DIR)/structures/TablaHash.cpp \
             $(SRC_DIR)/core/Backtracking.cpp
 
 TEST_BIN := $(BUILD_DIR)/tests_hash
+APP_BIN := $(BUILD_DIR)/app
+APP_SRCS := $(SRC_DIR)/main.cpp $(LIB_SRCS)
 
-.PHONY: all build test clean
+.PHONY: all build test clean app run
 
-all: build
+all: app
 
 build: $(TEST_BIN)
 
@@ -32,6 +34,15 @@ $(TEST_BIN): $(TEST_SRC) $(LIB_SRCS)
 
 test: build
 	$(TEST_BIN)
+
+app: $(APP_BIN)
+
+$(APP_BIN): $(APP_SRCS)
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+run: app
+	$(APP_BIN)
 
 clean:
 	rm -rf $(BUILD_DIR)
