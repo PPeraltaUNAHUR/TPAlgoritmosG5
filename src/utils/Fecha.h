@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <iostream>
-
 using namespace std;
 
 class Fecha {
@@ -21,7 +20,13 @@ public:
     int getMes() const;
     int getDia() const;
 
+    // Setters
+    void setDia(int d);
+    void setMes(int m);
+    void setAnio(int a);
+
     // ----- Métodos útiles -----
+    void mostrar() const;
     string toString() const;
     bool esValida() const;
 
