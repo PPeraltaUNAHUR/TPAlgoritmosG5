@@ -1,0 +1,2 @@
+BUE CentroBuenosAires BuenosAires 8000 200 60
+CBA CentroCordoba Cordoba 4000 120 40

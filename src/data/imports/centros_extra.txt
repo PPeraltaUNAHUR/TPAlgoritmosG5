@@ -1,0 +1,6 @@
+USH CentroUshuaia Ushuaia 2200 650 55
+TUC CentroTucuman Tucuman 2800 1000 75
+MDP CentroMarDelPlata MarDelPlata 3600 1300 85
+SFE CentroSantaFe SantaFe 3300 1150 82
+POS CentroPosadas Posadas 2400 800 60
+

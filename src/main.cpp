@@ -2,6 +2,7 @@
 #include <limits>
 #include <iomanip>
 #include <vector>
+#include <filesystem>
 #include "core/SistemaLogistica.h"
 #include "core/Backtracking.h"
 #include "models/Paquete.h"
@@ -12,6 +13,7 @@ namespace {
     const string RUTA_CENTROS = "src/data/centros.txt";
     const string RUTA_CONEXIONES = "src/data/conexiones.txt";
     const string RUTA_ENVIOS = "src/data/envios.txt";
+    const string DIRECTORIO_IMPORTS = "src/data/imports";
 }
 
 void limpiarBuffer() {
@@ -55,6 +57,7 @@ void mostrarMenu() {
     cout << "8. Optimizar carga de camión (Backtracking)\n";
     cout << "9. Agregar centro manualmente\n";
     cout << "10. Eliminar centro\n";
+    cout << "11. Cargar centros desde directorio de importación\n";
     cout << "0. Salir\n";
     cout << "Seleccione una opción: ";
 }
@@ -185,6 +188,27 @@ void optimizarCarga(SistemaLogistica& sistema) {
     cout << "\n";
 }
 
+void pausar() {
+    cout << "\nPresione Enter para continuar...";
+    limpiarBuffer();
+    cin.get();
+}
+
+vector<string> listarArchivos(const string& directorio) {
+    vector<string> archivos;
+    std::error_code ec;
+    if (!filesystem::exists(directorio, ec)) {
+        return archivos;
+    }
+    for (const auto& entry : filesystem::directory_iterator(directorio)) {
+        if (entry.is_regular_file()) {
+            archivos.push_back(entry.path().string());
+        }
+    }
+    sort(archivos.begin(), archivos.end());
+    return archivos;
+}
+
 void agregarCentroCLI(SistemaLogistica& sistema) {
     limpiarBuffer();
     string codigo;
@@ -218,6 +242,30 @@ void eliminarCentroCLI(SistemaLogistica& sistema) {
     }
 }
 
+void cargarCentrosExtraCLI(SistemaLogistica& sistema) {
+    auto archivos = listarArchivos(DIRECTORIO_IMPORTS);
+    if (archivos.empty()) {
+        cout << "No se encontraron archivos en " << DIRECTORIO_IMPORTS << ".\n";
+        return;
+    }
+
+    cout << "Archivos disponibles en " << DIRECTORIO_IMPORTS << ":\n";
+    for (std::size_t i = 0; i < archivos.size(); ++i) {
+        cout << "  " << (i + 1) << ") " << archivos[i] << "\n";
+    }
+    cout << "  0) Cancelar\n";
+
+    int opcion = leerEnteroSeguro("Seleccione archivo: ", 0);
+    if (opcion == 0 || opcion > static_cast<int>(archivos.size())) {
+        cout << "Operación cancelada.\n";
+        return;
+    }
+
+    const string& ruta = archivos[opcion - 1];
+    sistema.cargarCentros(ruta);
+    cout << "Centros adicionales cargados desde " << ruta << ".\n";
+}
+
 int main() {
     SistemaLogistica sistema;
     sistema.cargarCentros(RUTA_CENTROS);
@@ -236,33 +284,47 @@ int main() {
         switch (opcion) {
             case 1:
                 listarSegunCriterio(sistema, "envios");
+                pausar();
                 break;
             case 2:
                 listarSegunCriterio(sistema, "capacidad");
+                pausar();
                 break;
             case 3:
                 listarSegunCriterio(sistema, "empleados");
+                pausar();
                 break;
             case 4:
                 mostrarCamino(sistema);
+                pausar();
                 break;
             case 5:
                 mostrarEnviosEnRango(sistema);
+                pausar();
                 break;
             case 6:
                 detectarSobrecarga(sistema);
+                pausar();
                 break;
             case 7:
                 buscarPorPaquete(sistema);
+                pausar();
                 break;
             case 8:
                 optimizarCarga(sistema);
+                pausar();
                 break;
             case 9:
                 agregarCentroCLI(sistema);
+                pausar();
                 break;
             case 10:
                 eliminarCentroCLI(sistema);
+                pausar();
+                break;
+            case 11:
+                cargarCentrosExtraCLI(sistema);
+                pausar();
                 break;
             case 0:
                 salir = true;
