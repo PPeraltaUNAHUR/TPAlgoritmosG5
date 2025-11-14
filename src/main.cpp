@@ -14,6 +14,35 @@ namespace {
     const string RUTA_ENVIOS = "src/data/envios.txt";
 }
 
+void limpiarBuffer() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+int leerEnteroSeguro(const string& mensaje, int minimo = numeric_limits<int>::min()) {
+    while (true) {
+        cout << mensaje;
+        int valor;
+        if (cin >> valor && valor >= minimo) {
+            return valor;
+        }
+        cout << "Entrada inválida, intente nuevamente.\n";
+        limpiarBuffer();
+    }
+}
+
+double leerDoubleSeguro(const string& mensaje, double minimo = 0.0) {
+    while (true) {
+        cout << mensaje;
+        double valor;
+        if (cin >> valor && valor > minimo) {
+            return valor;
+        }
+        cout << "Entrada inválida, ingrese un número mayor a " << minimo << ".\n";
+        limpiarBuffer();
+    }
+}
+
 void mostrarMenu() {
     cout << "\n=== Sistema de Logística ===\n";
     cout << "1. Listar centros (por envíos diarios)\n";
@@ -24,6 +53,8 @@ void mostrarMenu() {
     cout << "6. Detectar sobrecarga semanal\n";
     cout << "7. Buscar envíos por paquete\n";
     cout << "8. Optimizar carga de camión (Backtracking)\n";
+    cout << "9. Agregar centro manualmente\n";
+    cout << "10. Eliminar centro\n";
     cout << "0. Salir\n";
     cout << "Seleccione una opción: ";
 }
@@ -36,10 +67,16 @@ string leerCodigoCentro(const string& mensaje) {
 }
 
 Fecha leerFecha(const string& mensaje) {
-    string fechaStr;
-    cout << mensaje << " (YYYYMMDD): ";
-    cin >> fechaStr;
-    return Fecha(fechaStr);
+    while (true) {
+        string fechaStr;
+        cout << mensaje << " (YYYYMMDD): ";
+        cin >> fechaStr;
+        Fecha fecha(fechaStr);
+        if (fecha.esValida()) {
+            return fecha;
+        }
+        cout << "Formato inválido de fecha.\n";
+    }
 }
 
 void listarSegunCriterio(SistemaLogistica& sistema, const string& criterio) {
@@ -63,6 +100,10 @@ void listarSegunCriterio(SistemaLogistica& sistema, const string& criterio) {
 void mostrarCamino(SistemaLogistica& sistema) {
     string origen = leerCodigoCentro("Centro origen: ");
     string destino = leerCodigoCentro("Centro destino: ");
+    if (!sistema.obtenerCentro(origen) || !sistema.obtenerCentro(destino)) {
+        cout << "Alguno de los centros no existe en el sistema.\n";
+        return;
+    }
     Camino camino = sistema.caminoMinimo(origen, destino);
     if (camino.getNodos().empty()) {
         cout << "No se encontró un camino válido.\n";
@@ -73,6 +114,10 @@ void mostrarCamino(SistemaLogistica& sistema) {
 
 void mostrarEnviosEnRango(SistemaLogistica& sistema) {
     string centro = leerCodigoCentro("Centro a analizar: ");
+    if (!sistema.obtenerCentro(centro)) {
+        cout << "Centro inexistente.\n";
+        return;
+    }
     Fecha desde = leerFecha("Fecha desde");
     Fecha hasta = leerFecha("Fecha hasta");
     auto envios = sistema.enviosEnRango(centro, desde, hasta);
@@ -85,9 +130,7 @@ void mostrarEnviosEnRango(SistemaLogistica& sistema) {
 }
 
 void detectarSobrecarga(SistemaLogistica& sistema) {
-    int maximo;
-    cout << "Máximo de envíos por semana permitido: ";
-    cin >> maximo;
+    int maximo = leerEnteroSeguro("Máximo de envíos por semana permitido: ", 1);
     auto centros = sistema.detectarSobrecarga(maximo);
     if (centros.empty()) {
         cout << "No se detectaron centros con sobrecarga.\n";
@@ -100,9 +143,7 @@ void detectarSobrecarga(SistemaLogistica& sistema) {
 }
 
 void buscarPorPaquete(SistemaLogistica& sistema) {
-    int id;
-    cout << "ID de paquete: ";
-    cin >> id;
+    int id = leerEnteroSeguro("ID de paquete: ");
     auto envios = sistema.buscarPorPaquete(id);
     if (envios.empty()) {
         cout << "No se encontraron envíos para ese paquete.\n";
@@ -123,9 +164,7 @@ void optimizarCarga(SistemaLogistica& sistema) {
         return;
     }
 
-    double capacidad;
-    cout << "Capacidad máxima del camión (kg): ";
-    cin >> capacidad;
+    double capacidad = leerDoubleSeguro("Capacidad máxima del camión (kg): ", 0.0);
 
     vector<Paquete> paquetes;
     paquetes.reserve(envios.size());
@@ -146,6 +185,39 @@ void optimizarCarga(SistemaLogistica& sistema) {
     cout << "\n";
 }
 
+void agregarCentroCLI(SistemaLogistica& sistema) {
+    limpiarBuffer();
+    string codigo;
+    string nombre;
+    string ciudad;
+    cout << "Código: ";
+    getline(cin, codigo);
+    cout << "Nombre: ";
+    getline(cin, nombre);
+    cout << "Ciudad: ";
+    getline(cin, ciudad);
+
+    int capacidad = leerEnteroSeguro("Capacidad: ", 0);
+    int envios = leerEnteroSeguro("Envíos diarios estimados: ", 0);
+    int empleados = leerEnteroSeguro("Cantidad de empleados: ", 0);
+
+    Centro nuevo(codigo, nombre, ciudad, capacidad, envios, empleados);
+    if (sistema.agregarCentro(nuevo)) {
+        cout << "Centro agregado correctamente.\n";
+    } else {
+        cout << "Ya existe un centro con ese código.\n";
+    }
+}
+
+void eliminarCentroCLI(SistemaLogistica& sistema) {
+    string codigo = leerCodigoCentro("Código del centro a eliminar: ");
+    if (sistema.eliminarCentro(codigo)) {
+        cout << "Centro eliminado.\n";
+    } else {
+        cout << "No se encontró el centro solicitado.\n";
+    }
+}
+
 int main() {
     SistemaLogistica sistema;
     sistema.cargarCentros(RUTA_CENTROS);
@@ -157,8 +229,7 @@ int main() {
         mostrarMenu();
         int opcion;
         if (!(cin >> opcion)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            limpiarBuffer();
             continue;
         }
 
@@ -186,6 +257,12 @@ int main() {
                 break;
             case 8:
                 optimizarCarga(sistema);
+                break;
+            case 9:
+                agregarCentroCLI(sistema);
+                break;
+            case 10:
+                eliminarCentroCLI(sistema);
                 break;
             case 0:
                 salir = true;
