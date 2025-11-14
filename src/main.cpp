@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <vector>
 #include <filesystem>
+#include <algorithm>
 #include "core/SistemaLogistica.h"
 #include "core/Backtracking.h"
 #include "models/Paquete.h"
@@ -173,7 +174,26 @@ void optimizarCarga(SistemaLogistica& sistema) {
     paquetes.reserve(envios.size());
     for (const auto* envio : envios) {
         if (!envio) continue;
-        double valor = envio->getPrioridad() > 0 ? envio->getPrioridad() : envio->getPeso();
+
+        double valor = 0.0;
+        int pid = envio->getIdPaquete();
+        double pesoPaquete = envio->getPeso();
+        while (true) {
+            cout << "Ingrese un valor para el paquete id=" << pid << " (peso=" << pesoPaquete << "): ";
+            if (!(cin >> valor)) {
+                limpiarBuffer();
+                cout << "Entrada invalida. Ingrese un numero.\n";
+                continue;
+            }
+            if (valor < 0.0) {
+                cout << "El valor no puede ser negativo. Intente nuevamente.\n";
+                limpiarBuffer();
+                continue;
+            }
+            limpiarBuffer();
+            break;
+        }
+
         paquetes.emplace_back(envio->getIdPaquete(), envio->getPeso(), valor);
     }
 
