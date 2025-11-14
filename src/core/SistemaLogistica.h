@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <memory>
 #include "../models/Centro.h"
 #include "../models/Envio.h"
 #include "../graph/Grafo.h"
@@ -19,10 +20,10 @@ private:
     Grafo red;
     
     //Índices para búsquedas y análisis
-    TablaHash<string, ABB<Fecha, vector<Envio>>> enviosPorCentro;
-    TablaHash<int, vector<Envio>> indicePaquetes;
-    TablaHash<int, vector<Envio>> indiceClientes;
-    vector<Envio> enviosRegistrados;
+    TablaHash<string, ABB<Fecha, vector<const Envio*>>> enviosPorCentro;
+    TablaHash<int, vector<const Envio*>> indicePaquetes;
+    TablaHash<int, vector<const Envio*>> indiceClientes;
+    vector<std::unique_ptr<Envio>> enviosRegistrados;
 
     void registrarEnvio(const Envio& envio);
     static int fechaADias(const Fecha& fecha);
@@ -50,9 +51,9 @@ public:
 
     //Métodos de envíos.
 
-    vector<Envio> enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta);
+    vector<const Envio*> enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta);
     vector<Centro*> detectarSobrecarga(int maximo);
-    vector<Envio> buscarPorPaquete(int idPaquete);
-    const vector<Envio>& obtenerEnvios() const { return enviosRegistrados; }
+    vector<const Envio*> buscarPorPaquete(int idPaquete);
+    vector<const Envio*> obtenerEnvios() const;
 
 };

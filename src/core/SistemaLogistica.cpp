@@ -13,7 +13,8 @@ SistemaLogistica::SistemaLogistica()
       red(),
       enviosPorCentro(BASE_TABLA),
       indicePaquetes(BASE_TABLA),
-      indiceClientes(BASE_TABLA) {}
+      indiceClientes(BASE_TABLA),
+      enviosRegistrados() {}
 
 SistemaLogistica::~SistemaLogistica() = default;
 
@@ -104,7 +105,7 @@ bool SistemaLogistica::agregarCentro(const Centro& centro) {
     }
 
     centros.insertar(centro.getCodigo(), centro);
-    enviosPorCentro.insertar(centro.getCodigo(), ABB<Fecha, vector<Envio>>{});
+    enviosPorCentro.insertar(centro.getCodigo(), ABB<Fecha, vector<const Envio*>>{});
     return true;
 }
 
@@ -152,14 +153,14 @@ Camino SistemaLogistica::caminoMinimo(const string& origen, const string& destin
     return red.dijkstra(origen, destino);
 }
 
-vector<Envio> SistemaLogistica::enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta) {
-    vector<Envio> resultado;
-    ABB<Fecha, vector<Envio>>* indice = enviosPorCentro.obtener(codigo);
+vector<const Envio*> SistemaLogistica::enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta) {
+    vector<const Envio*> resultado;
+    ABB<Fecha, vector<const Envio*>>* indice = enviosPorCentro.obtener(codigo);
     if (!indice) {
         return resultado;
     }
 
-    vector<vector<Envio>> porFecha = indice->rango(desde, hasta);
+    vector<vector<const Envio*>> porFecha = indice->rango(desde, hasta);
     for (const auto& lista : porFecha) {
         resultado.insert(resultado.end(), lista.begin(), lista.end());
     }
@@ -170,7 +171,7 @@ vector<Centro*> SistemaLogistica::detectarSobrecarga(int maximo) {
     vector<Centro*> resultado;
 
     for (const auto& codigo : centros.claves()) {
-        ABB<Fecha, vector<Envio>>* indice = enviosPorCentro.obtener(codigo);
+        ABB<Fecha, vector<const Envio*>>* indice = enviosPorCentro.obtener(codigo);
         if (!indice) continue;
 
         auto entradas = indice->entradas();
@@ -213,8 +214,8 @@ vector<Centro*> SistemaLogistica::detectarSobrecarga(int maximo) {
     return resultado;
 }
 
-vector<Envio> SistemaLogistica::buscarPorPaquete(int idPaquete) {
-    vector<Envio>* envios = indicePaquetes.obtener(idPaquete);
+vector<const Envio*> SistemaLogistica::buscarPorPaquete(int idPaquete) {
+    vector<const Envio*>* envios = indicePaquetes.obtener(idPaquete);
     if (!envios) {
         return {};
     }
@@ -222,35 +223,45 @@ vector<Envio> SistemaLogistica::buscarPorPaquete(int idPaquete) {
 }
 
 void SistemaLogistica::registrarEnvio(const Envio& envio) {
-    ABB<Fecha, vector<Envio>>* indiceCentro = enviosPorCentro.obtener(envio.getCodigoCentro());
+    enviosRegistrados.push_back(std::make_unique<Envio>(envio));
+    const Envio* punteroEnvio = enviosRegistrados.back().get();
+
+    ABB<Fecha, vector<const Envio*>>* indiceCentro = enviosPorCentro.obtener(envio.getCodigoCentro());
     if (!indiceCentro) {
-        enviosPorCentro.insertar(envio.getCodigoCentro(), ABB<Fecha, vector<Envio>>{});
+        enviosPorCentro.insertar(envio.getCodigoCentro(), ABB<Fecha, vector<const Envio*>>{});
         indiceCentro = enviosPorCentro.obtener(envio.getCodigoCentro());
     }
 
-    vector<Envio>* enviosFecha = indiceCentro->buscar(envio.getFecha());
+    vector<const Envio*>* enviosFecha = indiceCentro->buscar(envio.getFecha());
     if (!enviosFecha) {
-        vector<Envio> lista{envio};
+        vector<const Envio*> lista{punteroEnvio};
         indiceCentro->insertar(envio.getFecha(), lista);
     } else {
-        enviosFecha->push_back(envio);
+        enviosFecha->push_back(punteroEnvio);
     }
 
-    vector<Envio>* porPaquete = indicePaquetes.obtener(envio.getIdPaquete());
+    vector<const Envio*>* porPaquete = indicePaquetes.obtener(envio.getIdPaquete());
     if (!porPaquete) {
-        indicePaquetes.insertar(envio.getIdPaquete(), vector<Envio>{envio});
+        indicePaquetes.insertar(envio.getIdPaquete(), vector<const Envio*>{punteroEnvio});
     } else {
-        porPaquete->push_back(envio);
+        porPaquete->push_back(punteroEnvio);
     }
 
-    vector<Envio>* porCliente = indiceClientes.obtener(envio.getIdCliente());
+    vector<const Envio*>* porCliente = indiceClientes.obtener(envio.getIdCliente());
     if (!porCliente) {
-        indiceClientes.insertar(envio.getIdCliente(), vector<Envio>{envio});
+        indiceClientes.insertar(envio.getIdCliente(), vector<const Envio*>{punteroEnvio});
     } else {
-        porCliente->push_back(envio);
+        porCliente->push_back(punteroEnvio);
     }
+}
 
-    enviosRegistrados.push_back(envio);
+vector<const Envio*> SistemaLogistica::obtenerEnvios() const {
+    vector<const Envio*> resultado;
+    resultado.reserve(enviosRegistrados.size());
+    for (const auto& ptr : enviosRegistrados) {
+        resultado.push_back(ptr.get());
+    }
+    return resultado;
 }
 
 int SistemaLogistica::fechaADias(const Fecha& fecha) {

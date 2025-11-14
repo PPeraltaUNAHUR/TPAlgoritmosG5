@@ -77,8 +77,9 @@ void mostrarEnviosEnRango(SistemaLogistica& sistema) {
     Fecha hasta = leerFecha("Fecha hasta");
     auto envios = sistema.enviosEnRango(centro, desde, hasta);
     cout << "Se encontraron " << envios.size() << " envíos.\n";
-    for (const auto& envio : envios) {
-        envio.mostrarInfo();
+    for (const auto* envio : envios) {
+        if (!envio) continue;
+        envio->mostrarInfo();
         cout << "-----------------------------\n";
     }
 }
@@ -108,14 +109,15 @@ void buscarPorPaquete(SistemaLogistica& sistema) {
         return;
     }
     cout << envios.size() << " envíos encontrados:\n";
-    for (const auto& envio : envios) {
-        envio.mostrarInfo();
+    for (const auto* envio : envios) {
+        if (!envio) continue;
+        envio->mostrarInfo();
         cout << "-----------------------------\n";
     }
 }
 
 void optimizarCarga(SistemaLogistica& sistema) {
-    const auto& envios = sistema.obtenerEnvios();
+    auto envios = sistema.obtenerEnvios();
     if (envios.empty()) {
         cout << "Debe cargar los envíos antes de optimizar.\n";
         return;
@@ -127,9 +129,10 @@ void optimizarCarga(SistemaLogistica& sistema) {
 
     vector<Paquete> paquetes;
     paquetes.reserve(envios.size());
-    for (const auto& envio : envios) {
-        double valor = envio.getPrioridad() > 0 ? envio.getPrioridad() : envio.getPeso();
-        paquetes.emplace_back(envio.getIdPaquete(), envio.getPeso(), valor);
+    for (const auto* envio : envios) {
+        if (!envio) continue;
+        double valor = envio->getPrioridad() > 0 ? envio->getPrioridad() : envio->getPeso();
+        paquetes.emplace_back(envio->getIdPaquete(), envio->getPeso(), valor);
     }
 
     Backtracking opt;
