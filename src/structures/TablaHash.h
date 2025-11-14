@@ -15,7 +15,6 @@ private:
     std::size_t capacidad;
     std::size_t cantidadElementos;
 
-    // Calcula índice de bucket para una clave
     std::size_t calcularIndiceCubeta(const K& clave) const {
         if constexpr (std::is_same<K, std::string>::value) {
             return hashString(clave, capacidad);
@@ -25,11 +24,10 @@ private:
         }
     }
 
-    // Rehash opcional cuando el factor de carga supera el umbral
     void redistribuirSiEsNecesario() {
         const double factorCarga = static_cast<double>(cantidadElementos) / static_cast<double>(capacidad);
         if (factorCarga > 0.75) {
-            redistribuir(capacidad * 2 + 1); // crecer y mantener impar
+            redistribuir(capacidad * 2 + 1);
         }
     }
 
@@ -59,7 +57,7 @@ public:
         const std::size_t indiceCubeta = calcularIndiceCubeta(clave);
         for (auto& entrada : cubetas[indiceCubeta]) {
             if (entrada.first == clave) {
-                entrada.second = valor; // actualizar
+                entrada.second = valor;
                 return;
             }
         }

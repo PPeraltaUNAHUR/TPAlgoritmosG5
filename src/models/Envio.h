@@ -18,7 +18,6 @@ public:
     Envio(string codCentro, int idPaquete, int idCliente, Fecha fecha, double peso, int prioridad);
     ~Envio();
 
-    // Getters
     string getCodigoCentro() const;
     int getIdPaquete() const;
     int getIdCliente() const;
@@ -26,7 +25,6 @@ public:
     double getPeso() const;
     int getPrioridad() const;
 
-    // Setters 
     void setCodigoCentro(string codCentro);
     void setIdPaquete(int idPaquete);
     void setIdCliente(int idCliente);

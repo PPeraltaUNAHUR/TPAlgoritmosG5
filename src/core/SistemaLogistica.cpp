@@ -141,7 +141,6 @@ vector<Centro*> SistemaLogistica::listarCentros(const string& criterio) {
         if (criterioNormalizado == "empleados") {
             return a->obtenerEmpleados() > b->obtenerEmpleados();
         }
-        // por defecto ordenar por envíos diarios
         return a->obtenerEnviosDiarios() > b->obtenerEnviosDiarios();
     };
 

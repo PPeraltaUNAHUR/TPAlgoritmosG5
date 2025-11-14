@@ -1,9 +1,8 @@
-// Implementación de la función hash polinómica optimizada para strings
 #include <string>
 
 std::size_t hashString(const std::string& clave, std::size_t capacidad) {
-    const long long primoBase = 31;                // p
-    const long long primoGrandeMod = 1000000009LL; // m = 1e9 + 9
+    const long long primoBase = 31;
+    const long long primoGrandeMod = 1000000009LL;
     long long hashRodante = 0;
     long long potenciaBase = 1;
 

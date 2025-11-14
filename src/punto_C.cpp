@@ -23,7 +23,6 @@ int main()
 
             std::istringstream iss(linea);
             std::string codigoCentro, idStr, clienteStr, fecha, pesoStr;
-            // CÓDIGO ID CLIENTE FECHA PESO
             if (!(iss >> codigoCentro >> idStr >> clienteStr >> fecha >> pesoStr))
                 continue;
 

@@ -37,7 +37,7 @@ private:
         } else if (comparar(nodo->clave, clave)) {
             nodo->derecho = insertarRec(nodo->derecho, clave, valor);
         } else {
-            nodo->valor = valor; // actualizar
+            nodo->valor = valor;
         }
         return nodo;
     }

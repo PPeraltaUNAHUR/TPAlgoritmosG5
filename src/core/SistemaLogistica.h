@@ -14,12 +14,8 @@ using namespace std;
 
 class SistemaLogistica {
 private:
-
-    //Estructuras principales
     TablaHash<string, Centro> centros;
     Grafo red;
-    
-    //Índices para búsquedas y análisis
     TablaHash<string, ABB<Fecha, vector<const Envio*>>> enviosPorCentro;
     TablaHash<int, vector<const Envio*>> indicePaquetes;
     TablaHash<int, vector<const Envio*>> indiceClientes;
@@ -30,13 +26,9 @@ private:
     static string normalizarCriterio(const string& criterio);
 
 public:
-    //Constructor.
-
     SistemaLogistica();
     ~SistemaLogistica();    
     
-    //Centros.
-
     void cargarCentros(const string& ruta);
     void cargarConexiones(const string& ruta);
     void cargarEnvios(const string& ruta);
@@ -45,15 +37,10 @@ public:
     Centro* obtenerCentro(const string& codigo);
     vector<Centro*> listarCentros(const string& criterio);
 
-    //Caminos.
-
     Camino caminoMinimo(const string& origen, const string& destino);
-
-    //Métodos de envíos.
 
     vector<const Envio*> enviosEnRango(const string& codigo, const Fecha& desde, const Fecha& hasta);
     vector<Centro*> detectarSobrecarga(int maximo);
     vector<const Envio*> buscarPorPaquete(int idPaquete);
     vector<const Envio*> obtenerEnvios() const;
-
 };

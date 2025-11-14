@@ -29,7 +29,6 @@ private:
                    double capacidadMaxima,
                    Nodo *arbol);
 
-    // Liberar recursivamente los nodos del árbol combinatorio
     void liberarNodo(Nodo *node);
 
     double mejorValor{0.0};

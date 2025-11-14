@@ -5,7 +5,6 @@
 Fecha::Fecha() : anio(0), mes(0), dia(0) {}
 Fecha::Fecha(int anio, int mes, int dia): anio(anio), mes(mes), dia(dia) {}
 Fecha::Fecha(const string& fechaStr) {
-    // Espera formato "YYYYMMDD"
     if (fechaStr.size() != 8) {
         anio = mes = dia = 0;
         return;
@@ -16,17 +15,13 @@ Fecha::Fecha(const string& fechaStr) {
     dia  = stoi(fechaStr.substr(6, 2));
 }
 
-// Getters
 int Fecha::getAnio() const { return anio; }
 int Fecha::getMes() const { return mes; }
 int Fecha::getDia() const { return dia; }
 
-// Setters
 void Fecha::setDia(int d) { dia = d; }
 void Fecha::setMes(int m) { mes = m; }
 void Fecha::setAnio(int a) { anio = a; }
-
-// Métodos útiles
 
 bool Fecha::esValida() const {
     if (anio < 1 || mes < 1 || mes > 12 || dia < 1) return false;
@@ -54,8 +49,6 @@ string Fecha::toString() const {
 }
 
 
-// Operadores
-
 bool Fecha::operator==(const Fecha& otra) const {
     return anio == otra.anio && mes == otra.mes && dia == otra.dia;
 }
@@ -82,7 +75,6 @@ bool Fecha::operator>=(const Fecha& otra) const {
     return !(*this < otra);
 }
 
-// Operador de salida
 ostream& operator<<(ostream& os, const Fecha& f) {
     os << f.toString();
     return os;
