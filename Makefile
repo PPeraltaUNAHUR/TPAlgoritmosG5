@@ -8,7 +8,15 @@ THIRD_PARTY := $(ROOT)/third_party
 SRC_DIR := $(ROOT)/src
 TEST_SRC := $(SRC_DIR)/tests/test_tabla.cpp
 LIB_SRCS := $(SRC_DIR)/structures/TablaHash.cpp \
-            $(SRC_DIR)/models/Centro.cpp
+            $(SRC_DIR)/models/Centro.cpp \
+            $(SRC_DIR)/models/Envio.cpp \
+            $(SRC_DIR)/models/Paquete.cpp \
+            $(SRC_DIR)/models/Camino.cpp \
+            $(SRC_DIR)/models/Arista.cpp \
+            $(SRC_DIR)/utils/Fecha.cpp \
+            $(SRC_DIR)/graph/Grafo.cpp \
+            $(SRC_DIR)/core/SistemaLogistica.cpp \
+            $(SRC_DIR)/core/Backtracking.cpp
 
 TEST_BIN := $(BUILD_DIR)/tests_hash
 
