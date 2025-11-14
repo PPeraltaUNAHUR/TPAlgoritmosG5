@@ -102,4 +102,26 @@ public:
     double factor_carga() const {
         return static_cast<double>(cantidadElementos) / static_cast<double>(capacidad);
     }
+
+    std::vector<K> claves() const {
+        std::vector<K> resultado;
+        resultado.reserve(cantidadElementos);
+        for (const auto& cubeta : cubetas) {
+            for (const auto& entrada : cubeta) {
+                resultado.push_back(entrada.first);
+            }
+        }
+        return resultado;
+    }
+
+    std::vector<std::pair<K, V>> entradas() const {
+        std::vector<std::pair<K, V>> resultado;
+        resultado.reserve(cantidadElementos);
+        for (const auto& cubeta : cubetas) {
+            for (const auto& entrada : cubeta) {
+                resultado.push_back(entrada);
+            }
+        }
+        return resultado;
+    }
 };
